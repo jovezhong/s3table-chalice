@@ -1,11 +1,20 @@
+import json
+import boto3
+from botocore.exceptions import ClientError
 from chalice import Chalice
 
 app = Chalice(app_name='s3table-chalice')
+app.debug = True
 
 
 @app.route('/')
 def index():
-    return {'hello': 'world'}
+    #return {'hello': 'world'}
+    s3=boto3.resource('s3')
+    buckets=[]
+    for bucket in s3.buckets.all():
+        buckets.append(bucket.name)
+    return buckets
 
 
 # The view function above will return {"hello": "world"}

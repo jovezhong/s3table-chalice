@@ -1,1 +1,3 @@
-.chalice
+.chalice/venv
+.chalice/deployments
+.chalice/config.json
