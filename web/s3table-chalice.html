@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>S3 Buckets</title>
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway:400,300,600'>
+    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css'>
+    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css'>
+    <link rel='stylesheet' href='//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css'>
+    <script src='//code.jquery.com/jquery-2.1.4.min.js'></script>
+    <script src='//cdn.datatables.net/1.10.12/js/jquery.dataTables.js'></script>
+    <style type="text/css" media="all">
+      body { margin-top: 30px; }
+    </style>
+  </head>
+  <body>
+    <div class='view-container container'>
+        <div class='row'>
+            <div class='one-half column'>
+                <h3>S3 Bucket Manager</h3>
+                <a href='javascript:loadBuckets()' id='bn' class='button button-primary'>Load buckets</a>
+            </div>
+            <div class='one-half column'>
+            </div>
+        </div>
+        <div class="row">
+            <table id='table_id' style="display:none;width:90%">
+                <thead>
+                    <tr>
+                        <th>Bucket Name</th>
+                        <th>Created On</th>
+                        <th>Owner</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <script>
+        function loadBuckets(){
+            $('#bn').hide()
+            $('#table_id').show()
+            $('#table_id').DataTable({
+                ajax: {
+                    url:'https://8s3dhme53k.execute-api.us-east-1.amazonaws.com/dev/',
+                    dataSrc:''
+                },
+                columns: [{ data: 'name' }]
+            });
+        }
+    </script>
+  </body>
+</html>
