@@ -50,6 +50,12 @@ var userController = {
 
     $('#bn').show()
   },
+  getOptionsForRole: function(token) {
+    return {
+          "id_token": token, 
+          "api_type": 'aws'
+          };
+  },
   wireEvents: function() {
     var that = this;
     this.uiElements.loginButton.click(function(e) {
@@ -67,6 +73,17 @@ var userController = {
           localStorage.setItem('userToken', token);
           that.configureAuthenticatedRequests();
           that.showUserAuthenticationDetails(profile);
+          // get delegation token from identity token.
+          var options = that.getOptionsForRole(token);
+          var auth0=that.data.auth0Lock.getClient()
+          auth0.getDelegationToken(options,function(err,delegation)  {
+              if(err)
+                console.log('failed to acquire delegation token', err);
+              else{  
+                localStorage.setItem('awsToken', delegation.Credentials);  
+                console.log(delegation.Credentials);
+              }
+          });
         }
       });
     });
