@@ -8,19 +8,36 @@
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css'>
     <link rel='stylesheet' href='//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css'>
     <script src='//code.jquery.com/jquery-2.1.4.min.js'></script>
-    <script src='//cdn.datatables.net/1.10.12/js/jquery.dataTables.js'></script>
+    <script src='//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js'></script>
+    <script src="//cdn.auth0.com/js/lock-9.min.js"></script> 
+    <script src="user-controller.js"></script> 
     <style type="text/css" media="all">
-      body { margin-top: 30px; }
+        body { margin-top: 30px; }
+        #auth0-logout {
+            display: none;
+        }
+        #user-profile {
+            display: none;
+        }
+        #profilepicture {
+            height: 20px;
+            width: 20px;
+        } 
     </style>
   </head>
   <body>
     <div class='view-container container'>
         <div class='row'>
-            <div class='one-half column'>
+            <div class='ten columns'>
                 <h3>S3 Bucket Manager</h3>
                 <a href='javascript:loadBuckets()' id='bn' class='button button-primary'>Load buckets</a>
             </div>
-            <div class='one-half column'>
+            <div class='two columns' id="user-profile">
+                <img id="profilepicture" />&nbsp;<span id="profilename"></span>
+            </div>
+            <div class='one column'>
+                <button id="auth0-login" class="btn btn-success">Sign in</button>
+                <button id="auth0-logout" class="btn btn-success">Sign Out</button>
             </div>
         </div>
         <div class="row">
@@ -37,6 +54,7 @@
         </div>
     </div>
     <script>
+        $('#bn').hide()
         function loadBuckets(){
             $('#bn').hide()
             $('#table_id').show()
@@ -48,6 +66,11 @@
                 columns: [{ data: 'name' }]
             });
         }
+        (function(){
+                $(document).ready(function(){
+                  userController.init({auth0:{domain:'jove.auth0.com',clientId:'4W7MMzFRu5uCZl1H3sH8ZJw5gX9B9c9a'}}); 
+                });
+         }());
     </script>
   </body>
 </html>
