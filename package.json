@@ -1,0 +1,21 @@
+{
+  "name": "s3table-chalice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "s3": "aws s3 cp --recursive --acl public-read web/ s3://911public",
+    "deploy": "chalice deploy --no-autogen-policy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jovezhong@github.com/jovezhong/s3table-chalice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jovezhong/s3table-chalice/issues"
+  },
+  "homepage": "https://github.com/jovezhong/s3table-chalice#readme"
+}
