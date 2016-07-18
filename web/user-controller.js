@@ -80,8 +80,7 @@ var userController = {
               if(err)
                 console.log('failed to acquire delegation token', err);
               else{  
-                localStorage.setItem('awsToken', delegation.Credentials);  
-                console.log(delegation.Credentials);
+                localStorage.setItem('awsToken', JSON.stringify(delegation.Credentials));
               }
           });
         }
@@ -89,6 +88,7 @@ var userController = {
     });
     this.uiElements.logoutButton.click(function(e) {      
       localStorage.removeItem('userToken');
+      localStorage.removeItem('awsToken');
       that.uiElements.logoutButton.hide();
       that.uiElements.profileButton.hide();
       that.uiElements.loginButton.show();
