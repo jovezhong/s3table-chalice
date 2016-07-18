@@ -1,4 +1,4 @@
 .chalice/venv
 .chalice/deployments
 .chalice/config.json
-/.DS_Store
+*.DS_Store
