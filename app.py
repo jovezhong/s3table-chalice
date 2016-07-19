@@ -13,7 +13,7 @@ def index():
     s3=boto3.resource('s3')
     buckets=[]
     for bucket in s3.buckets.all():
-        buckets.append({'name':bucket.name})
+        buckets.append({'name':bucket.name,'created':bucket.creation_date.isoformat(' '),'owner':'','note':''})
     return buckets
 
 

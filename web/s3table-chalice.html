@@ -6,9 +6,9 @@
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway:400,300,600'>
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css'>
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css'>
-    <link rel='stylesheet' href='//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css'>
+    <link rel='stylesheet' href='//cdn.datatables.net/v/dt/dt-1.10.12/b-1.2.1/se-1.2.0/datatables.min.css'>
     <script src='//code.jquery.com/jquery-2.1.4.min.js'></script>
-    <script src='//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js'></script>
+    <script src='//cdn.datatables.net/v/dt/dt-1.10.12/b-1.2.1/se-1.2.0/datatables.min.js'></script>
     <script src="//cdn.auth0.com/js/lock-9.min.js"></script> 
     <script src="user-controller.js"></script> 
     <!-- scripts for aws api gateway -->
@@ -71,17 +71,46 @@
             $('#bn').hide()
             $('#table_id').show()
             $('#table_id').DataTable({
+                select:true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'selected',
+                        action: function ( e, dt, node, config ) {
+                            var d = dt.row( { selected: true } ).data();
+                            getSecureApiClient().bucketsBucketGet({'bucket':d.name},{}).then(function(response){
+                                var key1='Owner=';
+                                var key2=',Note=';
+                                var str=prompt('Update the owner and note',key1+response.data.owner+key2+response.data.note)
+                                if(str){
+                                    var p1=str.indexOf(key2)
+                                    var inputOwner=str.substring(key1.length,p1)
+                                    var inputNote=str.substring(p1+key2.length)
+                                    getSecureApiClient().bucketsPost({},{
+                                        'bucket':d.name,
+                                        'owner':inputOwner,
+                                        'note':inputNote
+                                    })
+                                }
+                            }).catch(function(response){
+                                console.log('Fail to load data from DynamoDB');
+                            });
+                        }
+                    }
+                ],
                 ajax: {
                     url:'https://8s3dhme53k.execute-api.us-east-1.amazonaws.com/dev/',
                     dataSrc:''
                 },
-                columns: [{ data: 'name' }]
+                columns: [{ data: 'name' },{data:'created'},{data:'owner'},{data:'note'},]
             });
+            /*
             getSecureApiClient().bucketsGet({},{}).then(function(response){
                 console.log(response.data);//[]
             }).catch(function(response){
-                alert('Fail to load data from DynamoDB');
+                console.log('Fail to load data from DynamoDB');
             });
+            */
         }
         function getSecureApiClient() {
             var awstoken = JSON.parse(localStorage.getItem('awsToken'));
