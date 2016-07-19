@@ -77,7 +77,8 @@
                     {
                         extend: 'selected',
                         action: function ( e, dt, node, config ) {
-                            var d = dt.row( { selected: true } ).data();
+                            var theRow = dt.row( { selected: true } );
+                            var d = theRow.data();
                             getSecureApiClient().bucketsBucketGet({'bucket':d.name},{}).then(function(response){
                                 var key1='Owner=';
                                 var key2=',Note=';
@@ -86,6 +87,9 @@
                                     var p1=str.indexOf(key2)
                                     var inputOwner=str.substring(key1.length,p1)
                                     var inputNote=str.substring(p1+key2.length)
+                                    d.owner=inputOwner
+                                    d.note=inputNote
+                                    theRow.data(d)
                                     getSecureApiClient().bucketsPost({},{
                                         'bucket':d.name,
                                         'owner':inputOwner,
