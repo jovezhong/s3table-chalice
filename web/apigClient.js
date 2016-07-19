@@ -154,6 +154,24 @@ apigClientFactory.newClient = function (config) {
         return apiGatewayClient.makeRequest(bucketsBucketGetRequest, authType, additionalParams, config.apiKey);
     };
     
+    
+    apigClient.bucketsBucketOptions = function (params, body, additionalParams) {
+        if(additionalParams === undefined) { additionalParams = {}; }
+        
+        apiGateway.core.utils.assertParametersDefined(params, ['bucket'], ['body']);
+        
+        var bucketsBucketOptionsRequest = {
+            verb: 'options'.toUpperCase(),
+            path: pathComponent + uritemplate('/buckets/{bucket}').expand(apiGateway.core.utils.parseParametersToObject(params, ['bucket'])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            body: body
+        };
+        
+        
+        return apiGatewayClient.makeRequest(bucketsBucketOptionsRequest, authType, additionalParams, config.apiKey);
+    };
+    
 
     return apigClient;
 };
