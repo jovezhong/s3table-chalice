@@ -24,7 +24,7 @@ var userController = {
       this.configureAuthenticatedRequests();
       this.data.auth0Lock.getProfile(idToken, function(err, profile) { 
         if (err) {
-          return alert('There was an error getting the profile: ' + err.message);
+          return console.log('There was an error getting the profile', err);
         }
        that.showUserAuthenticationDetails(profile);
       });
