@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset='utf-8'>
     <title>S3 Buckets</title>
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway:400,300,600'>
@@ -9,8 +10,8 @@
     <link rel='stylesheet' href='//cdn.datatables.net/v/dt/dt-1.10.12/b-1.2.1/se-1.2.0/datatables.min.css'>
     <script src='//code.jquery.com/jquery-2.1.4.min.js'></script>
     <script src='//cdn.datatables.net/v/dt/dt-1.10.12/b-1.2.1/se-1.2.0/datatables.min.js'></script>
-    <script src="//cdn.auth0.com/js/lock-9.min.js"></script> 
-    <script src="user-controller.js"></script> 
+    <script src="//cdn.auth0.com/js/lock/10.16.0/lock.min.js"></script>
+    <script src="user-controller.js"></script>
     <!-- scripts for aws api gateway -->
     <script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
     <script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
@@ -24,20 +25,26 @@
     <script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
     <script type="text/javascript" src="apigClient.js"></script>
     <style type="text/css" media="all">
-        body { margin-top: 30px; }
+        body {
+            margin-top: 30px;
+        }
+        
         #auth0-logout {
             display: none;
         }
+        
         #user-profile {
             display: none;
         }
+        
         #profilepicture {
             height: 20px;
             width: 20px;
-        } 
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class='view-container container'>
         <div class='row'>
             <div class='ten columns'>
@@ -48,7 +55,7 @@
                 <img id="profilepicture" />&nbsp;<span id="profilename"></span>
             </div>
             <div class='one column'>
-                <button id="auth0-login" class="btn btn-success">Sign in</button>
+                <button id="auth0-login" class="btn btn-success">Sign in</button>
                 <button id="auth0-logout" class="btn btn-success">Sign Out</button>
             </div>
         </div>
@@ -67,46 +74,57 @@
     </div>
     <script>
         $('#bn').hide()
-        function loadBuckets(){
+
+        function loadBuckets() {
             $('#bn').hide()
             $('#table_id').show()
             $('#table_id').DataTable({
-                select:true,
+                select: true,
                 dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'selected',
-                        action: function ( e, dt, node, config ) {
-                            var theRow = dt.row( { selected: true } );
-                            var d = theRow.data();
-                            getSecureApiClient().bucketsBucketGet({'bucket':d.name},{}).then(function(response){
-                                var key1='Owner=';
-                                var key2=',Note=';
-                                var str=prompt('Update the owner and note',key1+response.data.owner+key2+response.data.note)
-                                if(str){
-                                    var p1=str.indexOf(key2)
-                                    var inputOwner=str.substring(key1.length,p1)
-                                    var inputNote=str.substring(p1+key2.length)
-                                    d.owner=inputOwner
-                                    d.note=inputNote
-                                    theRow.data(d)
-                                    getSecureApiClient().bucketsPost({},{
-                                        'bucket':d.name,
-                                        'owner':inputOwner,
-                                        'note':inputNote
-                                    })
-                                }
-                            }).catch(function(response){
-                                console.log('Fail to load data from DynamoDB');
-                            });
-                        }
+                buttons: [{
+                    extend: 'selected',
+                    action: function(e, dt, node, config) {
+                        var theRow = dt.row({
+                            selected: true
+                        });
+                        var d = theRow.data();
+                        getSecureApiClient().bucketsBucketGet({
+                            'bucket': d.name
+                        }, {}).then(function(response) {
+                            var key1 = 'Owner=';
+                            var key2 = ',Note=';
+                            var str = prompt('Update the owner and note', key1 + response.data.owner + key2 + response.data.note)
+                            if (str) {
+                                var p1 = str.indexOf(key2)
+                                var inputOwner = str.substring(key1.length, p1)
+                                var inputNote = str.substring(p1 + key2.length)
+                                d.owner = inputOwner
+                                d.note = inputNote
+                                theRow.data(d)
+                                getSecureApiClient().bucketsPost({}, {
+                                    'bucket': d.name,
+                                    'owner': inputOwner,
+                                    'note': inputNote
+                                })
+                            }
+                        }).catch(function(response) {
+                            console.log('Fail to load data from DynamoDB');
+                        });
                     }
-                ],
+                }],
                 ajax: {
-                    url:'https://8s3dhme53k.execute-api.us-east-1.amazonaws.com/dev/',
-                    dataSrc:''
+                    url: 'https://8s3dhme53k.execute-api.us-east-1.amazonaws.com/dev/',
+                    dataSrc: ''
                 },
-                columns: [{ data: 'name' },{data:'created'},{data:'owner'},{data:'note'},]
+                columns: [{
+                    data: 'name'
+                }, {
+                    data: 'created'
+                }, {
+                    data: 'owner'
+                }, {
+                    data: 'note'
+                }, ]
             });
             /*
             getSecureApiClient().bucketsGet({},{}).then(function(response){
@@ -116,6 +134,7 @@
             });
             */
         }
+
         function getSecureApiClient() {
             var awstoken = JSON.parse(localStorage.getItem('awsToken'));
             return apigClientFactory.newClient({
@@ -125,11 +144,17 @@
                 region: 'us-east-1' // The region you are working out of.
             });
         }
-        (function(){
-                $(document).ready(function(){
-                  userController.init({auth0:{domain:'jove.auth0.com',clientId:'4W7MMzFRu5uCZl1H3sH8ZJw5gX9B9c9a'}}); 
-                });
-         }());
+        (function() {       
+            $(document).ready(function() {         
+                userController.init({
+                    auth0: {
+                        domain: 'jovezhong.auth0.com',
+                        clientId: 'B3NpfffiW5omoXxcWPz6ZpukDmcnXggO'
+                    }
+                });       
+            }); 
+        }());
     </script>
-  </body>
+</body>
+
 </html>
